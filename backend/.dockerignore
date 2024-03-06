@@ -1,0 +1,8 @@
+# ignore all files starting with a dot
+.*
+requests/
+node_modules/
+Dockerfile
+*compose*
+fly.toml
+README.md

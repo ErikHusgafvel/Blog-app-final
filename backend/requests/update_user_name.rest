@@ -1,6 +1,7 @@
-PUT http://localhost:3001/api/users/lotta.pyykonen10@gmail.com
+PUT http://localhost:3001/api/users/test@example.com
 Content-Type: application/json
+Cookie: session=// cookie of the user who is in question
 
 {
-  "name": "Lotta Ida Sofia Pyykönen"
+  "name": "Test User"
 }

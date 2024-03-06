@@ -15,22 +15,14 @@ const readingsRouter = require('./controllers/readings');
 const logoutRouter = require('./controllers/logout');
 const middleware = require('./utils/middleware');
 
-const { connectToDatabase, sequelize } = require('./utils/db');
+const { sequelize } = require('./utils/db');
 
 const morgan = require('morgan');
-
-const start = async () => {
-  await connectToDatabase();
-};
-
-start();
 
 app.use(express.json());
 app.use(
   session({
-    genid: (req) => {
-      console.log('Inside the session middleware');
-      console.log(req.sessionID);
+    genid: (_req) => {
       return uuidv1();
     },
     secret: process.env.SESSION_SECRET,
@@ -47,11 +39,13 @@ morgan.token('body-to-json', (req) => {
   return JSON.stringify(req.body || {});
 });
 
-app.use(
-  morgan(
-    ':method :url :status :res[content-length] - :response-time ms :body-to-json'
-  )
-);
+if (process.env.NODE_ENV === 'development') {
+  app.use(
+    morgan(
+      ':method :url :status :res[content-length] - :response-time ms :body-to-json'
+    )
+  );
+}
 
 /** Please, notice that the app is using export-async-errors library!
  * Thus, errors are handled "under the hood".

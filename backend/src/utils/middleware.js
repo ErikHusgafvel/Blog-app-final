@@ -34,7 +34,7 @@ const sessionExtractor = async (req, res, next) => {
     }
   } else {
     return res
-      .status(403)
+      .status(401)
       .json({ error: 'invalid session - proceed to login' });
   }
   next();

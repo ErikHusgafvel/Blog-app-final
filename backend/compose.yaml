@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  blog-app:
+    build:
+      context: .
+    depends_on:
+      - blog-database
+    ports:
+      - 3001:3001
+    environment:
+      DATABASE_URL: postgres://postgres:password@blog-database:5432/docker_db
+      SECRET: sekret1
+      SESSION_SECRET: sekret2
+    volumes:
+      - ./src:/app/src
+    develop:
+      watch:
+        - path: ./package.json
+          action: rebuild
+        - path: .
+          target: ./app
+          action: sync
+  blog-database:
+    image: postgres
+    #volumes: // TBD - solution to persist data
+    #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    #- pg_blog-app_data:/data/db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: docker_db
+#volumes: // TBD - solution to persist data
+#pg_blog-app_data:

@@ -5,6 +5,7 @@ const { Umzug, SequelizeStorage } = require('umzug');
 
 const sequelize = new Sequelize(DATABASE_URL, {
   dialect: 'postgresql',
+  logging: process.env.NODE_ENV === 'development' ? console.log : false,
 });
 
 const migrationConf = {
@@ -33,7 +34,7 @@ const rollbackMigration = async () => {
 const connectToDatabase = async () => {
   try {
     await sequelize.authenticate();
-    if (!process.env.NODE_ENV == 'test') {
+    if (process.env.NODE_ENV != 'test') {
       await runMigrations();
     }
     console.log('database connected');

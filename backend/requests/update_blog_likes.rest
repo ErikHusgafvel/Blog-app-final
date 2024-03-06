@@ -1,6 +1,7 @@
-PUT http://localhost:3001/api/blogs/8
+PUT http://localhost:3001/api/blogs/259
 Content-Type: application/json
+Cookie: session= //cookie of the user who created the blog
 
 {
-  "likes": -2
+  "likes": 2
 }
