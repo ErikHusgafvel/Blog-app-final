@@ -26,7 +26,7 @@ router.delete('/', sessionExtractor, async (req, res) => {
   (otherwise throwing invalid session error)
   */
   sessions.forEach((session) => destroySessionsAsync(session));
-  req.session.destroy((error) => console.log(console.log(error)));
+  req.session.destroy((error) => console.log(error));
   res.status(200).end();
 });
 

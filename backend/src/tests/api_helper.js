@@ -39,17 +39,14 @@ const initialBlogs = [
   },
 ];
 
-const nonExistingId = async () => {
-  const newBlog = Blog.create({
+const nonExistingId = async (userId) => {
+  const newBlog = await Blog.create({
     title: 'testing',
     author: 'testing',
     url: 'testing.com',
-    likes: 0,
-    userId: 1,
+    userId,
   });
-  await newBlog.save();
-  await newBlog.destroy();
-
+  await Blog.destroy({ where: { id: newBlog.id } });
   return newBlog.id.toString();
 };
 
@@ -63,9 +60,17 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON());
 };
 
+/**
+ * Helper function to get the last element of an array.
+ * @param {Array} array - The array to get the last element from.
+ * @returns {*} The last element of the array.
+ */
+const last = (array) => array[array.length - 1];
+
 module.exports = {
   initialBlogs,
   blogsInDb,
   nonExistingId,
   usersInDb,
+  last,
 };

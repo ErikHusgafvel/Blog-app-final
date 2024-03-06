@@ -7,9 +7,11 @@ const User = require('../models/user');
 
 const { sessionExtractor } = require('../utils/middleware');
 
-const blogFinder = async (req, _res, next) => {
+const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id);
-  if (!req.blog) throw new Error('blog not found');
+  if (!req.blog) {
+    return res.status(404).json({ error: 'blog not found' });
+  }
   next();
 };
 
@@ -65,13 +67,12 @@ router.put('/:id', sessionExtractor, blogFinder, async (req, res) => {
 });
 
 router.delete('/:id', sessionExtractor, blogFinder, async (req, res) => {
-  const user = await User.findByPk(req.userId);
-  if (user.id === req.blog.userId) {
-    await req.blog.destroy();
-    return res.status(204).end();
-  } else {
+  if (req.userId !== req.blog.userId) {
     return res.status(401).json({ error: 'unauthorized action' });
   }
+
+  await req.blog.destroy();
+  return res.status(204).end();
 });
 
 module.exports = router;
