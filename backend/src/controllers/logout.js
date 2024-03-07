@@ -16,7 +16,11 @@ router.delete('/', sessionExtractor, async (req, res) => {
   });
 
   const destroySessionsAsync = async (session) => {
-    await session.destroy();
+    try {
+      await session.destroy();
+    } catch (error) {
+      console.error('Error destroying session:', error);
+    }
   };
 
   /*
@@ -25,9 +29,22 @@ router.delete('/', sessionExtractor, async (req, res) => {
   the userId exists in the database
   (otherwise throwing invalid session error)
   */
-  sessions.forEach((session) => destroySessionsAsync(session));
-  req.session.destroy((error) => console.log(error));
-  res.status(200).end();
+
+  try {
+    await Promise.all(sessions.map(destroySessionsAsync));
+
+    req.session.destroy((error) => {
+      if (error) {
+        console.error('Error destroying req.session:', error);
+        res.status(500).json({ error: 'Failed to destroy session' });
+      } else {
+        res.status(200).end();
+      }
+    });
+  } catch (error) {
+    console.error('Error destroying sessions:', error);
+    res.status(500).json({ error: 'Failed to destroy sessions' });
+  }
 });
 
 module.exports = router;

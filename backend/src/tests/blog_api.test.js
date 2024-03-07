@@ -2,6 +2,7 @@ const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
 const { Blog, User } = require('../models');
+const Session = require('../models/session');
 const bcrypt = require('bcrypt');
 const helper = require('./api_helper');
 const { sequelize } = require('../utils/db');
@@ -34,6 +35,7 @@ describe('when there is initally some blogs and a user saved', () => {
   beforeEach(async () => {
     await Blog.destroy({ where: {} });
     await User.destroy({ where: {} });
+    await Session.destroy({ where: {} });
 
     // create user
     try {

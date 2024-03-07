@@ -6,7 +6,14 @@ const errorHandler = (error, req, res, next) => {
     case 'SequelizeValidationError':
       return res.status(400).json({
         error:
-          error.errors.len > 0
+          error.errors.length > 0
+            ? error.errors.map((error) => error.message)
+            : error.message,
+      });
+    case 'SequelizeUniqueConstraintError':
+      return res.status(400).json({
+        error:
+          error.errors.length > 0
             ? error.errors.map((error) => error.message)
             : error.message,
       });
@@ -15,7 +22,7 @@ const errorHandler = (error, req, res, next) => {
     case 'SequelizeBaseError':
       return res.status(404).send({ error: 'resource not found' });
     default:
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({ error: error });
   }
   next();
 };
