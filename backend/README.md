@@ -2,11 +2,13 @@
 
 You can launch the app in a docker container by
 
+
 First, starting the `blog-database` service:
 
 `docker-compose up -d blog-database`
 
 The `-d` flag is for detached mode, which means it starts the container in the background and leaves it running.
+
 
 Once the database is up and running, you can start the `blog-app` service:
 
